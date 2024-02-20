@@ -132,7 +132,7 @@ steps:
       - id: input_file
         source: "#download_submission/filepath"
       - id: goldstandard_path
-        valueFrom: "/home/ec2-user/challenge-data/testing"
+        valueFrom: "/home/ec2-user/challenge-data/TestingData"
       - id: score_script
         default:
           class: File
