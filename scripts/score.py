@@ -211,7 +211,7 @@ def calculate_all_scores(groundtruth_path: str, predictions_path: str, evaluatio
 
     # get mapping of inputs and outs for specific task
     task_info = task_mapping.get(evaluation_id)
-
+    
     # get unique systems
     pred_files = os.listdir(predictions_path)
     pred_systems = list(set(f.split('_')[0] for f in pred_files))
@@ -259,8 +259,14 @@ def score_submission(groundtruth_path: str, predictions_path: str, evaluation_id
         # score the predictions
         scores = calculate_all_scores(
             groundtruth_path, 'predictions', evaluation_id)
-        score_status = 'SCORED'
-        message = ''
+        
+        if scores:
+            score_status = 'SCORED'
+            message = ''
+        else:
+            message = f'No scores'
+            scores = None
+            score_status = 'INVALID'
     except Exception as e:
         message = f'Error {e} occurred while scoring'
         scores = None
