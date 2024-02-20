@@ -325,8 +325,8 @@ if __name__ == '__main__':
     predictions_path = args.input_file
     results_path = args.output
 
-    untar('gs', tar_filename=groundtruth_path, pattern='.npy')
-    groundtruth_path = "gs"
+    untar('Test_KS', tar_filename=groundtruth_path, pattern='.npy')
+    groundtruth_path = "Test_KS"
     # client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     # config = synapseclient.Synapse().getConfigFile(
     #     configPath=args.synapse_config
