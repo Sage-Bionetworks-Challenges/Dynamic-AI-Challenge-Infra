@@ -70,9 +70,9 @@ requirements:
           if annots.get('score_status') is None:
             raise Exception("score.cwl must return score_status as a json key")
           status = annots['score_status']
-          if status == "SCORED":
-              del annots['score_status']
-              del annots['score_errors']
+          if status:
+            #   del annots['score_status']
+            #   del annots['score_errors']
               subject = "Submission to '%s' scored!" % evaluation.name
               for annot in args.private_annotations:
                 del annots[annot]
@@ -88,14 +88,14 @@ requirements:
                   messageSubject=subject,
                   messageBody="".join(message))
             
-          if status == "INVALID":
-              subject = "Submission to '%s' is Invalid!" % evaluation.name
-              message = ["Hello %s,\n\n" % name,
-                         "Your submission (id: %s) is invalid, below are your error message:\n\n" % sub.id,
-                         "\n %s." annots['score_errors'],
-                         "\n\nSincerely,\nChallenge Administrator"]
-              syn.sendMessage(
-                  userIds=[participantid],
-                  messageSubject=subject,
-                  messageBody="".join(message))
+        #   if status == "INVALID":
+        #       subject = "Submission to '%s' is Invalid!" % evaluation.name
+        #       message = ["Hello %s,\n\n" % name,
+        #                  "Your submission (id: %s) is invalid, below are your error message:\n\n" % sub.id,
+        #                  "\n %s." annots['score_errors'],
+        #                  "\n\nSincerely,\nChallenge Administrator"]
+        #       syn.sendMessage(
+        #           userIds=[participantid],
+        #           messageSubject=subject,
+        #           messageBody="".join(message))
 outputs: []
