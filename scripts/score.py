@@ -7,8 +7,8 @@ import tarfile
 import numpy as np
 from typing import Tuple, List
 import synapseclient
-import docker
-import subprocess
+# import docker
+# import subprocess
 
 def get_args():
     """Set up command-line interface and get arguments without any flags."""
@@ -18,7 +18,7 @@ def get_args():
                         help='The path to the groundtruth path')
     parser.add_argument('-i', '--input_file', type=str,
                         help='The path to the predictions file')
-    parser.add_argument("-c", "--synapse_config", help="credentials file")
+    # parser.add_argument("-c", "--synapse_config", help="credentials file")
     parser.add_argument('-o', '--output', type=str, nargs='?',
                         default='results.json', help='The path to output file')
 
@@ -255,12 +255,11 @@ def score_submission(groundtruth_path: str, predictions_path: str, evaluation_id
         result (dict): dictionary containing score, status and errors
     '''
     try:
-        untar('gs', tar_filename=groundtruth_path, pattern='.npy')
         # assume predictions are compressed into a tarball file
         # untar the predictions into 'predictions' folder
         untar('predictions', tar_filename=predictions_path, pattern='.npy')
         # score the predictions
-        scores = calculate_all_scores('gs', 'predictions', evaluation_id)
+        scores = calculate_all_scores(groundtruth_path, 'predictions', evaluation_id)
         
         if scores:
             score_status = 'SCORED'
@@ -326,20 +325,22 @@ if __name__ == '__main__':
     predictions_path = args.input_file
     results_path = args.output
 
-    client = docker.DockerClient(base_url='unix://var/run/docker.sock')
-    config = synapseclient.Synapse().getConfigFile(
-        configPath=args.synapse_config
-    )
-    authen = dict(config.items("authentication"))
-    client.login(username=authen['username'],
-                 password=authen['password'],
-                 registry="https://docker.synapse.org")
+    untar('gs', tar_filename=groundtruth_path, pattern='.npy')
+    groundtruth_path = "gs"
+    # client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+    # config = synapseclient.Synapse().getConfigFile(
+    #     configPath=args.synapse_config
+    # )
+    # authen = dict(config.items("authentication"))
+    # client.login(username=authen['username'],
+    #              password=authen['password'],
+    #              registry="https://docker.synapse.org")
     
-    subprocess.check_call(
-                ["docker", "cp", f"{args.groundtruth_path}", "."])
+    # subprocess.check_call(
+    #             ["docker", "cp", f"{args.groundtruth_path}", "."])
     
     # get scores of submission
-    score_status, result = score_submission(".", predictions_path, eval_id)
+    score_status, result = score_submission(groundtruth_path, predictions_path, eval_id)
 
     # update the scores and status for the submsision
     with open(results_path, 'w') as file:

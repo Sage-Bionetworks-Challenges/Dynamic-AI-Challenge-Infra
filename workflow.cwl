@@ -55,16 +55,16 @@ steps:
       - id: entity_type
       - id: results
       
-  # download_goldstandard:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks-Workflows/cwl-tool-synapseclient/v1.4/cwl/synapse-get-tool.cwl
-  #   in:
-  #     # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
-  #     - id: synapseid
-  #       valueFrom: "syn18081597"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #   out:
-  #     - id: filepath
+  download_goldstandard:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks-Workflows/cwl-tool-synapseclient/v1.4/cwl/synapse-get-tool.cwl
+    in:
+      # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
+      - id: synapseid
+        valueFrom: "syn53643551"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: filepath
 
   validate:
     run: steps/validate.cwl
@@ -141,18 +141,19 @@ steps:
       - id: input_file
         source: "#download_submission/filepath"
       - id: groundtruth_path
-        valueFrom: "/home/ec2-user/challenge-data/TestingData"
+        source: "#download_goldstandard/filepath"
+        # valueFrom: "/home/ec2-user/challenge-data/TestingData"
         # valueFrom: "/Users/rchai/DREAM/Dynamic-AI/Data/TestingData"
       - id: score_script
         default:
           class: File
           location: "scripts/score.py"
-      - id: docker_registry
-        source: "#get_docker_config/docker_registry"
-      - id: docker_authentication
-        source: "#get_docker_config/docker_authentication"
-      - id: synapse_config
-        source: "#synapseConfig"
+      # - id: docker_registry
+      #   source: "#get_docker_config/docker_registry"
+      # - id: docker_authentication
+      #   source: "#get_docker_config/docker_authentication"
+      # - id: synapse_config
+      #   source: "#synapseConfig"
     out:
       - id: results
 
