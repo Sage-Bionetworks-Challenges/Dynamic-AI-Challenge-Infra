@@ -26,7 +26,7 @@ inputs:
   - id: input_file
     type: File?
   - id: groundtruth_path
-    type: string
+    type: File
   # - id: docker_registry
   #   type: string
   # - id: docker_authentication
