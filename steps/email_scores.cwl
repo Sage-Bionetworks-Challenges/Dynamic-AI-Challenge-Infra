@@ -92,7 +92,7 @@ requirements:
               subject = "Submission to '%s' invalid!" % evaluation.name
               message = ["Hello %s,\n\n" % name,
                          "Your submission (id: %s) is invalid, below are your error message:\n\n" % sub.id,
-                         "\n %s." annots["score_errors"],
+                         "\n %s." % annots["score_errors"],
                          "\n\nSincerely,\nChallenge Administrator"]
               syn.sendMessage(
                   userIds=[participantid],
