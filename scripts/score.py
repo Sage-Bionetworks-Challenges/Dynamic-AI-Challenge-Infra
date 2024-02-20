@@ -10,10 +10,12 @@ import synapseclient
 # import docker
 # import subprocess
 
+
 def get_args():
     """Set up command-line interface and get arguments without any flags."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('-e', '--evaluation_id', type=str, help='The evaluation ID of submission')
+    parser.add_argument('-e', '--evaluation_id', type=str,
+                        help='The evaluation ID of submission')
     parser.add_argument('-g', '--groundtruth_path', type=str,
                         help='The path to the groundtruth path')
     parser.add_argument('-i', '--input_file', type=str,
@@ -213,7 +215,7 @@ def calculate_all_scores(groundtruth_path: str, predictions_path: str, evaluatio
 
     # get mapping of inputs and outs for specific task
     task_info = task_mapping.get(evaluation_id)
-    
+
     # get unique systems
     pred_files = os.listdir(predictions_path)
     pred_systems = list(set(f.split('_')[0] for f in pred_files))
@@ -230,7 +232,7 @@ def calculate_all_scores(groundtruth_path: str, predictions_path: str, evaluatio
                 predictions_path, f'{system}_{prefix}prediction.npy')
 
             # score provided required files
-            if os.path.exists(pred_path) and os.path.exists(truth_path): 
+            if os.path.exists(pred_path) and os.path.exists(truth_path):
                 truth = np.load(truth_path)
                 pred = np.load(pred_path)
 
@@ -259,8 +261,9 @@ def score_submission(groundtruth_path: str, predictions_path: str, evaluation_id
         # untar the predictions into 'predictions' folder
         untar('predictions', tar_filename=predictions_path, pattern='.npy')
         # score the predictions
-        scores = calculate_all_scores(groundtruth_path, 'predictions', evaluation_id)
-        
+        scores = calculate_all_scores(
+            groundtruth_path, 'predictions', evaluation_id)
+
         if scores:
             score_status = 'SCORED'
             message = ''
@@ -326,7 +329,7 @@ if __name__ == '__main__':
     results_path = args.output
 
     untar('Test_KS', tar_filename=groundtruth_path, pattern='.npy')
-    groundtruth_path = "Test_KS"
+    groundtruth_path = "."
     # client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     # config = synapseclient.Synapse().getConfigFile(
     #     configPath=args.synapse_config
@@ -335,12 +338,13 @@ if __name__ == '__main__':
     # client.login(username=authen['username'],
     #              password=authen['password'],
     #              registry="https://docker.synapse.org")
-    
+
     # subprocess.check_call(
     #             ["docker", "cp", f"{args.groundtruth_path}", "."])
-    
+
     # get scores of submission
-    score_status, result = score_submission(groundtruth_path, predictions_path, eval_id)
+    score_status, result = score_submission(
+        groundtruth_path, predictions_path, eval_id)
 
     # update the scores and status for the submsision
     with open(results_path, 'w') as file:
