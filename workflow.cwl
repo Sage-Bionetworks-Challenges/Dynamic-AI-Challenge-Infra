@@ -127,23 +127,19 @@ steps:
   score:
     run: steps/score.cwl
     in:
-      - id: check_validation_finished 
-        source: "#check_status/finished"
       - id: evaluation_id
         source: "#download_submission/evaluation_id"
       - id: input_file
         source: "#download_submission/filepath"
       - id: goldstandard_path
         valueFrom: "/home/ec2-user/challenge-data/testing"
-      - id: check_validation_finished 
-        source: "#check_status/finished"
       - id: score_script
         default:
           class: File
           location: "scripts/score.py"
     out:
       - id: results
-      
+
   email_score:
     run: steps/email_scores.cwl
     in:

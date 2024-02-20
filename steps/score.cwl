@@ -22,8 +22,6 @@ inputs:
     type: File?
   - id: goldstandard_path
     type: string
-  - id: check_validation_finished
-    type: boolean?
 
 arguments:
   - valueFrom: $(inputs.score_script.path)
