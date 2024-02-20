@@ -16,6 +16,8 @@ requirements:
       - $(inputs.validate_script)
 
 inputs:
+  - id: validate_script
+    type: File
   - id: evaluation_id
     type: string
   - id: input_file
@@ -27,7 +29,7 @@ arguments:
     valueFrom: $(inputs.evaluation_id)
   - prefix: -i
     valueFrom: $(inputs.input_file)
-  - prefix: -r
+  - prefix: -o
     valueFrom: results.json
 
 outputs:

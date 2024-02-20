@@ -16,6 +16,8 @@ requirements:
       - $(inputs.score_script)
 
 inputs:
+  - id: score_script
+    type: File
   - id: evaluation_id
     type: string
   - id: input_file
@@ -31,7 +33,7 @@ arguments:
     valueFrom: $(inputs.goldstandard_path)
   - prefix: -i
     valueFrom: $(inputs.input_file)
-  - prefix: -r
+  - prefix: -o
     valueFrom: results.json
 
 outputs:
