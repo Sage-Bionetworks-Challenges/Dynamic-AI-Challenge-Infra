@@ -57,7 +57,7 @@ requirements:
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
 
-          sub = syn.getSubmission(args.submissionid)
+          sub = syn.getSubmission(args.submissionid, downloadFile=False)
           participantid = sub.get("teamId")
           if participantid is not None:
             name = syn.getTeam(participantid)['name']
