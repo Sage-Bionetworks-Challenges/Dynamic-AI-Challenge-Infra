@@ -71,8 +71,8 @@ requirements:
             raise Exception("score.cwl must return score_status as a json key")
           status = annots['score_status']
           if status == "SCORED":
-            #   del annots['score_status']
-            #   del annots['score_errors']
+              del annots['score_status']
+              del annots['score_errors']
               subject = "Submission to '%s' scored!" % evaluation.name
               for annot in args.private_annotations:
                 del annots[annot]
