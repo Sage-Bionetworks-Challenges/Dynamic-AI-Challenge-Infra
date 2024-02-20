@@ -22,7 +22,7 @@ inputs:
     type: string
   - id: input_file
     type: File?
-  - id: goldstandard_path
+  - id: groundtruth_path
     type: string
 
 arguments:
@@ -30,7 +30,7 @@ arguments:
   - prefix: -e
     valueFrom: $(inputs.evaluation_id)
   - prefix: -g
-    valueFrom: $(inputs.goldstandard_path)
+    valueFrom: $(inputs.groundtruth_path)
   - prefix: -i
     valueFrom: $(inputs.input_file)
   - prefix: -o
