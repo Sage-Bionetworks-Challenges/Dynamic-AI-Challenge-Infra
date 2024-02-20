@@ -31,9 +31,8 @@ steps:
     in:
       - id: entityid
         source: "#submitterUploadSynId"
-      # TODO: replace `valueFrom` with the admin user ID or admin team ID
       - id: principalid
-        valueFrom: "3379097"
+        valueFrom: "3477032"
       - id: permissions
         valueFrom: "download"
       - id: synapse_config
@@ -52,27 +51,32 @@ steps:
       - id: docker_repository
       - id: docker_digest
       - id: entity_id
+      - id: evaluation_id
       - id: entity_type
       - id: results
       
-  download_goldstandard:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks-Workflows/cwl-tool-synapseclient/v1.4/cwl/synapse-get-tool.cwl
-    in:
-      # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
-      - id: synapseid
-        valueFrom: "syn18081597"
-      - id: synapse_config
-        source: "#synapseConfig"
-    out:
-      - id: filepath
+  # download_goldstandard:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks-Workflows/cwl-tool-synapseclient/v1.4/cwl/synapse-get-tool.cwl
+  #   in:
+  #     # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
+  #     - id: synapseid
+  #       valueFrom: "syn18081597"
+  #     - id: synapse_config
+  #       source: "#synapseConfig"
+  #   out:
+  #     - id: filepath
 
   validate:
     run: steps/validate.cwl
     in:
+      - id: evaluation_id
+        source: "#download_submission/evaluation_id"
       - id: input_file
         source: "#download_submission/filepath"
-      - id: entity_type
-        source: "#download_submission/entity_type"
+      - id: validate_script
+        default:
+          class: File
+          location: "scripts/validate.py"
     out:
       - id: results
       - id: status
@@ -123,17 +127,25 @@ steps:
   score:
     run: steps/score.cwl
     in:
-      - id: input_file
-        source: "#download_submission/filepath"
-      - id: goldstandard
-        source: "#download_goldstandard/filepath"
       - id: check_validation_finished 
         source: "#check_status/finished"
+      - id: evaluation_id
+        source: "#download_submission/evaluation_id"
+      - id: input_file
+        source: "#download_submission/filepath"
+      - id: goldstandard_path
+        valueFrom: "/home/ec2-user/challenge-data/testing"
+      - id: check_validation_finished 
+        source: "#check_status/finished"
+      - id: score_script
+        default:
+          class: File
+          location: "scripts/score.py"
     out:
       - id: results
       
   email_score:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/score_email.cwl
+    run: steps/email_scores.cwl
     in:
       - id: submissionid
         source: "#submissionId"
