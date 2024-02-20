@@ -14,8 +14,8 @@ def get_args():
     """Set up command-line interface and get arguments without any flags."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--evaluation_id', type=str, help='The evaluation ID of submission')
-    parser.add_argument('-g', '--groundtruth_file', type=str,
-                        help='The path to the groundtruth file')
+    parser.add_argument('-g', '--groundtruth_path', type=str,
+                        help='The path to the groundtruth path')
     parser.add_argument('-i', '--input_file', type=str,
                         help='The path to the predictions file')
     parser.add_argument("-c", "--synapse_config", help="credentials file")
@@ -339,7 +339,7 @@ if __name__ == '__main__':
                 ["docker", "cp", f"{args.groundtruth_path}", "."])
     
     # get scores of submission
-    score_status, result = score_submission(groundtruth_path, predictions_path, eval_id)
+    score_status, result = score_submission(".", predictions_path, eval_id)
 
     # update the scores and status for the submsision
     with open(results_path, 'w') as file:

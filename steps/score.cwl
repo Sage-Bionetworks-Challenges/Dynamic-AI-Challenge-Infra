@@ -7,7 +7,7 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: sagebionetworks/synapsepythonclient:v2.3.0
+    dockerPull: docker.synapse.org/syn52052736/synapseclient-docker:v2.3.0
 
 requirements:
   - class: InlineJavascriptRequirement
