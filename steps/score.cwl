@@ -14,6 +14,9 @@ requirements:
   - class: InitialWorkDirRequirement
     listing:
       - $(inputs.score_script)
+      - entryname: .docker/config.json
+        entry: |
+          {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
 
 inputs:
   - id: score_script
@@ -24,7 +27,13 @@ inputs:
     type: File?
   - id: groundtruth_path
     type: string
-
+  - id: docker_registry
+    type: string
+  - id: docker_authentication
+    type: string
+  - id: synapse_config
+    type: File
+  
 arguments:
   - valueFrom: $(inputs.score_script.path)
   - prefix: -e
@@ -33,6 +42,8 @@ arguments:
     valueFrom: $(inputs.groundtruth_path)
   - prefix: -i
     valueFrom: $(inputs.input_file)
+  - prefix: -c
+    valueFrom: $(inputs.synapse_config.path)
   - prefix: -o
     valueFrom: results.json
 
