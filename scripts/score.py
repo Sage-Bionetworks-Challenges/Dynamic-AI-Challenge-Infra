@@ -228,7 +228,7 @@ def calculate_all_scores(groundtruth_path: str, predictions_path: str, evaluatio
                 predictions_path, f'{system}_{prefix}prediction.npy')
 
             # score provided required files
-            if os.path.exists(pred_path): 
+            if os.path.exists(pred_path) and os.path.exists(truth_path): 
                 truth = np.load(truth_path)
                 pred = np.load(pred_path)
 
