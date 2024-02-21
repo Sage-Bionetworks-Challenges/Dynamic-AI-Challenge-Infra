@@ -7,8 +7,6 @@ import tarfile
 import numpy as np
 from typing import Tuple, List
 import synapseclient
-# import docker
-# import subprocess
 
 
 def get_args():
@@ -42,7 +40,7 @@ def tar(directory, tar_filename) -> None:
         os.chdir(original_dir)
 
 
-def untar(directory: str, tar_filename: str, pattern='*') -> None:
+def untar(directory: str, tar_filename: str, pattern=None) -> None:
     """Untar a tar file into a directory
 
     Args:
@@ -50,10 +48,13 @@ def untar(directory: str, tar_filename: str, pattern='*') -> None:
         tar_filename:  tar file path
     """
     with tarfile.open(tar_filename, 'r') as tar_f:
-        for member in tar_f.getmembers():
-            if member.isfile() and member.name.endswith(pattern):
-                member.name = os.path.basename(member.name)
-                tar_f.extract(member, path=directory)
+        if pattern:
+            for member in tar_f.getmembers():
+                if member.isfile() and member.name.endswith(pattern):
+                    member.name = os.path.basename(member.name)
+                    tar_f.extract(member, path=directory)
+        else:
+            tar_f.extractall(path=directory)
 
 
 def ODE_forecast(truth: np.ndarray, prediction: np.ndarray, k: int, modes: int) -> Tuple[float, float]:
@@ -328,19 +329,9 @@ if __name__ == '__main__':
     predictions_path = args.input_file
     results_path = args.output
 
-    untar('Test_KS', tar_filename=groundtruth_path, pattern='.npy')
-    groundtruth_path = "."
-    # client = docker.DockerClient(base_url='unix://var/run/docker.sock')
-    # config = synapseclient.Synapse().getConfigFile(
-    #     configPath=args.synapse_config
-    # )
-    # authen = dict(config.items("authentication"))
-    # client.login(username=authen['username'],
-    #              password=authen['password'],
-    #              registry="https://docker.synapse.org")
-
-    # subprocess.check_call(
-    #             ["docker", "cp", f"{args.groundtruth_path}", "."])
+    # extract groundtruth files
+    untar('groundtruths', tar_filename=groundtruth_path)
+    groundtruth_path = "groundtruths"
 
     # get scores of submission
     score_status, result = score_submission(
