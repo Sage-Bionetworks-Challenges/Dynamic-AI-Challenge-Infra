@@ -124,15 +124,6 @@ steps:
         source: "#email_validation/finished"
     out: [finished]
 
-  get_docker_config:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/get_docker_config.cwl
-    in:
-      - id: synapse_config
-        source: "#synapseConfig"
-    out: 
-      - id: docker_registry
-      - id: docker_authentication
-
   score:
     run: steps/score.cwl
     in:
