@@ -287,23 +287,21 @@ def score_submission(groundtruth_path: str, predictions_path: str, evaluation_id
     return score_status, result
 
 
-def get_eval_id(syn: synapseclient.Synapse, submission_id: str) -> str:
-    '''Get evaluation id for the submission
-
-    Args:
-        syn: Synapse connection
-        submission_id (str): the id of submission
-
-    Returns:
-        sub_id (str): the evaluation ID, or None if an error occurs.
-    '''
-    try:
-        eval_id = syn.getSubmission(submission_id).get('evaluationId')
-        return eval_id
-    except Exception as e:
-        print(
-            f'An error occurred while retrieving the evaluation ID for submission {submission_id}: {e}')
-        return None
+# def get_eval_id(syn: synapseclient.Synapse, submission_id: str) -> str:
+#     '''Get evaluation id for the submission
+#     Args:
+#         syn: Synapse connection
+#         submission_id (str): the id of submission
+#     Returns:
+#         sub_id (str): the evaluation ID, or None if an error occurs.
+#     '''
+#     try:
+#         eval_id = syn.getSubmission(submission_id).get('evaluationId')
+#         return eval_id
+#     except Exception as e:
+#         print(
+#             f'An error occurred while retrieving the evaluation ID for submission {submission_id}: {e}')
+#         return None
 
 
 def update_json(results_path: str, result: dict) -> None:

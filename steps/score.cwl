@@ -45,5 +45,5 @@ outputs:
     type: string
     outputBinding:
       glob: results.json
-      outputEval: $(JSON.parse(self[0].contents)['validation_status'])
+      outputEval: $(JSON.parse(self[0].contents)['score_status'])
       loadContents: true
