@@ -188,4 +188,8 @@ steps:
     in:
       - id: status
         source: "#score/status"
+      - id: previous_annotation_finished
+        source: "#annotate_submission_with_output/finished"
+      - id: previous_email_finished
+        source: "#email_score/finished"
     out: [finished]
