@@ -14,28 +14,6 @@ hints:
   DockerRequirement:
     dockerPull: sagebionetworks/synapsepythonclient:v2.3.0
 
-inputs:
-  - id: submissionid
-    type: int
-  - id: synapse_config
-    type: File
-  - id: results
-    type: File
-  - id: private_annotations
-    type: string[]?
-
-arguments:
-  - valueFrom: score_email.py
-  - valueFrom: $(inputs.submissionid)
-    prefix: -s
-  - valueFrom: $(inputs.synapse_config.path)
-    prefix: -c
-  - valueFrom: $(inputs.results)
-    prefix: -r
-  - valueFrom: $(inputs.private_annotations)
-    prefix: -p
-
-
 requirements:
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
@@ -88,7 +66,6 @@ requirements:
                   messageSubject=subject,
                   messageBody="".join(message))
           if status == "INVALID":
-              
               subject = "Submission to '%s' invalid!" % evaluation.name
               message = ["Hello %s,\n\n" % name,
                          "Your submission (id: %s) is invalid, below are your error message:\n\n" % sub.id,
@@ -98,17 +75,28 @@ requirements:
                   userIds=[participantid],
                   messageSubject=subject,
                   messageBody="".join(message))
+                  
+inputs:
+  - id: submissionid
+    type: int
+  - id: synapse_config
+    type: File
+  - id: results
+    type: File
+  - id: private_annotations
+    type: string[]?
 
+arguments:
+  - valueFrom: score_email.py
+  - valueFrom: $(inputs.submissionid)
+    prefix: -s
+  - valueFrom: $(inputs.synapse_config.path)
+    prefix: -c
+  - valueFrom: $(inputs.results)
+    prefix: -r
+  - valueFrom: $(inputs.private_annotations)
+    prefix: -p
 
-            
-        #   if status == "INVALID":
-        #       subject = "Submission to '%s' is Invalid!" % evaluation.name
-        #       message = ["Hello %s,\n\n" % name,
-        #                  "Your submission (id: %s) is invalid, below are your error message:\n\n" % sub.id,
-        #                  "\n %s." annots['score_errors'],
-        #                  "\n\nSincerely,\nChallenge Administrator"]
-        #       syn.sendMessage(
-        #           userIds=[participantid],
-        #           messageSubject=subject,
-        #           messageBody="".join(message))
-outputs: []
+outputs:
+  - id: finished
+    type: boolean

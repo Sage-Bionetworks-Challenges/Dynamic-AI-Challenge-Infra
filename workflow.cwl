@@ -148,14 +148,9 @@ steps:
         default:
           class: File
           location: "scripts/score.py"
-      # - id: docker_registry
-      #   source: "#get_docker_config/docker_registry"
-      # - id: docker_authentication
-      #   source: "#get_docker_config/docker_authentication"
-      # - id: synapse_config
-      #   source: "#synapseConfig"
     out:
       - id: results
+      - id: status
 
   email_score:
     run: steps/email_scores.cwl
@@ -169,7 +164,7 @@ steps:
       # OPTIONAL: add annotations to be withheld from participants to `[]`
       # - id: private_annotations
       #   default: []
-    out: []
+    out: [finished]
 
   annotate_submission_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/annotate_submission.cwl
@@ -188,3 +183,9 @@ steps:
         source: "#annotate_validation_with_output/finished"
     out: [finished]
  
+   check_score_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/check_status.cwl
+    in:
+      - id: status
+        source: "#score/status"
+    out: [finished]
