@@ -99,6 +99,6 @@ arguments:
 
 outputs:
   - id: finished
-  type: boolean
-  outputBinding:
-    outputEval: $( true )
+    type: boolean
+    outputBinding:
+        outputEval: $( true )
