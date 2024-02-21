@@ -18,8 +18,7 @@ def get_args():
                         help='The path to the groundtruth path')
     parser.add_argument('-i', '--input_file', type=str,
                         help='The path to the predictions file')
-    # parser.add_argument("-c", "--synapse_config", help="credentials file")
-    parser.add_argument('-o', '--output', type=str, nargs='?',
+    parser.add_argument('-o', '--output', type=str, required=False,
                         default='results.json', help='The path to output file')
 
     return parser.parse_args()

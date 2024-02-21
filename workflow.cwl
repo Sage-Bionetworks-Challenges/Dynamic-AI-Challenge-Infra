@@ -183,9 +183,9 @@ steps:
         source: "#annotate_validation_with_output/finished"
     out: [finished]
  
-   check_score_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/check_status.cwl
-    in:
-      - id: status
-        source: "#score/status"
-    out: [finished]
+  # check_score_status:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/check_status.cwl
+  #   in:
+  #     - id: status
+  #       source: "#score/status"
+  #   out: [finished]
