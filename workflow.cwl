@@ -31,9 +31,8 @@ steps:
     in:
       - id: entityid
         source: "#submitterUploadSynId"
-      # TODO: replace `valueFrom` with the admin user ID or admin team ID
       - id: principalid
-        valueFrom: "3379097"
+        valueFrom: "3477032"
       - id: permissions
         valueFrom: "download"
       - id: synapse_config
@@ -52,6 +51,7 @@ steps:
       - id: docker_repository
       - id: docker_digest
       - id: entity_id
+      - id: evaluation_id
       - id: entity_type
       - id: results
       
@@ -60,7 +60,7 @@ steps:
     in:
       # TODO: replace `valueFrom` with the Synapse ID to the challenge goldstandard
       - id: synapseid
-        valueFrom: "syn18081597"
+        valueFrom: "syn53645141"
       - id: synapse_config
         source: "#synapseConfig"
     out:
@@ -69,10 +69,14 @@ steps:
   validate:
     run: steps/validate.cwl
     in:
+      - id: evaluation_id
+        source: "#download_submission/evaluation_id"
       - id: input_file
         source: "#download_submission/filepath"
-      - id: entity_type
-        source: "#download_submission/entity_type"
+      - id: validate_script
+        default:
+          class: File
+          location: "scripts/validate.py"
     out:
       - id: results
       - id: status
@@ -123,17 +127,24 @@ steps:
   score:
     run: steps/score.cwl
     in:
+      - id: evaluation_id
+        source: "#download_submission/evaluation_id"
       - id: input_file
         source: "#download_submission/filepath"
-      - id: goldstandard
+      - id: groundtruth_path
         source: "#download_goldstandard/filepath"
-      - id: check_validation_finished 
-        source: "#check_status/finished"
+        # valueFrom: "/home/ec2-user/challenge-data/TestingData"
+        # valueFrom: "/Users/rchai/DREAM/Dynamic-AI/Data/TestingData"
+      - id: score_script
+        default:
+          class: File
+          location: "scripts/score.py"
     out:
       - id: results
-      
+      - id: status
+
   email_score:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/score_email.cwl
+    run: steps/email_scores.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -144,7 +155,7 @@ steps:
       # OPTIONAL: add annotations to be withheld from participants to `[]`
       # - id: private_annotations
       #   default: []
-    out: []
+    out: [finished]
 
   annotate_submission_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/annotate_submission.cwl
@@ -163,3 +174,13 @@ steps:
         source: "#annotate_validation_with_output/finished"
     out: [finished]
  
+  check_score_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.1/cwl/check_status.cwl
+    in:
+      - id: status
+        source: "#score/status"
+      - id: previous_annotation_finished
+        source: "#annotate_submission_with_output/finished"
+      - id: previous_email_finished
+        source: "#email_score/finished"
+    out: [finished]

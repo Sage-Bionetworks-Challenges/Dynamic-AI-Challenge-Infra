@@ -9,8 +9,12 @@ import os
 def get_args():
     """Set up command-line interface and get arguments without any flags."""
     parser = argparse.ArgumentParser()
+<<<<<<< HEAD
     parser.add_argument('-e', '--evaluation_id', type=str,
                         help='The queue ID of submission')
+=======
+    parser.add_argument('-e', '--evaluation_id', type=str, help='The queue ID of submission')
+>>>>>>> origin/main
     parser.add_argument('-i', '--input_file', type=str,
                         help='The path to the predictions file')
     parser.add_argument('-o', '--output', type=str, nargs='?',
